@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>Manutenção</title></head>
+<body style="font-family: sans-serif; padding: 20px;">
+    <h2>CSU03 - Registrar Manutenção</h2>
+    
+    <div style="background: #fff3cd; padding: 20px; border-radius: 8px;">
+        <form action="/manutencao" method="POST">
+            <label>Rastreador com defeito:</label><br>
+            <select name="rastreadorId" required style="padding: 8px; width: 300px;">
+                <% rastreadores.forEach(r => { %>
+                    <option value="<%= r.id %>"><%= r.imei %> - <%= r.modelo %></option>
+                <% }) %>
+            </select><br><br>
+
+            <label>Descrição do Problema:</label><br>
+            <textarea name="descricao" rows="3" cols="40" required></textarea><br><br>
+
+            <input type="text" name="tecnico" placeholder="Nome do Técnico" required style="padding: 8px;"><br><br>
+
+            <button type="submit" style="padding: 10px 20px;">Abrir Ordem de Serviço</button>
+        </form>
+    </div>
+    <br><a href="/">Voltar ao Painel</a>
+</body>
+</html>

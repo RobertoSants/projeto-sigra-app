@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Histórico do Rastreador</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f4f6f9; }
+        .header-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; border-left: 5px solid #007bff; }
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #e9ecef; }
+        .btn-voltar { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    
+    <div class="header-card">
+        <h1>Ficha Técnica</h1>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+                <p><strong>IMEI:</strong> <%= rastreador.imei %></p>
+                <p><strong>Fabricante:</strong> <%= rastreador.fabricante || '-' %></p>
+                <p><strong>Produto:</strong> <%= rastreador.modelo %></p>
+            </div>
+            <div>
+                <p><strong>Operadora:</strong> <%= rastreador.operadora || '-' %></p>
+                <p><strong>Nº Chip:</strong> <%= rastreador.numero_chip || '-' %></p>
+                <p><strong>Linha/ICCID:</strong> <%= rastreador.linha_chip || '-' %></p>
+            </div>
+        </div>
+        <hr>
+        <p><strong>Status Atual:</strong> <span style="font-size: 1.2em; color: #007bff"><%= rastreador.status %></span></p>
+    </div>
+
+    <h3>🛠️ Histórico de Manutenções</h3>
+    <% if (rastreador.manutencaos && rastreador.manutencaos.length > 0) { %>
+        <table>
+            <thead><tr><th>Data</th><th>Técnico</th><th>Descrição do Problema</th></tr></thead>
+            <tbody>
+                <% rastreador.manutencaos.forEach(m => { %>
+                    <tr>
+                        <td><%= new Date(m.data).toLocaleString() %></td>
+                        <td><%= m.tecnico %></td>
+                        <td><%= m.descricao %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>Nenhuma manutenção registrada.</p>
+    <% } %>
+
+    <h3>🚚 Histórico de Movimentações</h3>
+    <% if (rastreador.movimentacaos && rastreador.movimentacaos.length > 0) { %>
+        <table>
+            <thead><tr><th>Data</th><th>Tipo</th><th>Responsável</th><th>Destino/Cliente</th></tr></thead>
+            <tbody>
+                <% rastreador.movimentacaos.forEach(mov => { %>
+                    <tr>
+                        <td><%= new Date(mov.data).toLocaleString() %></td>
+                        <td><%= mov.tipo %></td>
+                        <td><%= mov.responsavel %></td>
+                        <td>
+                            <% if (mov.cliente) { %>
+                                <strong><%= mov.cliente.nome %></strong> (Cliente)
+                            <% } else { %>
+                                <%= mov.destino_texto || '-' %>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>Nenhuma movimentação registrada.</p>
+    <% } %>
+
+    <a href="/" class="btn-voltar">← Voltar</a>
+</body>
+</html>

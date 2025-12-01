@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Novo Rastreador</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background-color: #f4f6f9; }
+        .form-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 600px; margin: 40px auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn-salvar { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        .btn-salvar:hover { background: #218838; }
+        .btn-voltar { display: block; text-align: center; margin-top: 15px; text-decoration: none; color: #666; }
+    </style>
+</head>
+<body>
+    
+    <div class="form-card">
+        <h2 style="text-align: center; color: #007bff;">CSU01 - Cadastro de Equipamento</h2>
+        <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+
+        <form action="/rastreador" method="POST">
+            <div class="form-group">
+                <label>Número IMEI *</label>
+                <input type="text" name="imei" placeholder="Identificador Único" required>
+            </div>
+
+            <div class="form-group">
+                <label>Modelo / Produto *</label>
+                <input type="text" name="modelo" placeholder="Ex: GV50, TK303" required>
+            </div>
+
+            <div class="form-group">
+                <label>Fabricante</label>
+                <input type="text" name="fabricante" placeholder="Ex: Suntech, Queclink">
+            </div>
+
+            <h4 style="margin-top: 20px; color: #666;">Dados do Chip (Opcional)</h4>
+            <div class="form-group">
+                <label>Operadora</label>
+                <input type="text" name="operadora" placeholder="Ex: Vivo M2M">
+            </div>
+            
+            <div class="form-group">
+                <label>Número do Chip</label>
+                <input type="text" name="numero_chip">
+            </div>
+
+            <div class="form-group">
+                <label>Linha / ICCID</label>
+                <input type="text" name="linha_chip">
+            </div>
+
+            <button type="submit" class="btn-salvar">Salvar Equipamento</button>
+        </form>
+
+        <a href="/" class="btn-voltar">Cancelar e Voltar</a>
+    </div>
+
+</body>
+</html>

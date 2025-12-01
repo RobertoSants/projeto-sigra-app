@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head><title>Movimentação</title></head>
+<body style="font-family: sans-serif; padding: 20px;">
+    <h2>CSU02 - Registrar Movimentação</h2>
+    
+    <div style="background: #e9ecef; padding: 20px; border-radius: 8px;">
+        <form action="/movimentacao" method="POST">
+            <label>Rastreador:</label><br>
+            <select name="rastreadorId" required style="width: 300px; padding: 8px;">
+                <% rastreadores.forEach(r => { %>
+                    <option value="<%= r.id %>"><%= r.imei %> - <%= r.modelo %> (<%= r.status %>)</option>
+                <% }) %>
+            </select><br><br>
+
+            <label>Tipo:</label><br>
+            <select name="tipo" id="tipoSelect" style="padding: 8px;" onchange="alternarDestino()">
+                <option value="SAIDA">SAÍDA (Enviar para Cliente)</option>
+                <option value="ENTRADA">ENTRADA (Devolução)</option>
+                <option value="TRANSFERENCIA">TRANSFERÊNCIA</option>
+            </select><br><br>
+
+            <div id="divCliente">
+                <label>Selecione o Cliente:</label><br>
+                <select name="clienteId" style="padding: 8px; width: 300px;">
+                    <option value="">-- Selecione --</option>
+                    <% clientes.forEach(c => { %>
+                        <option value="<%= c.id %>"><%= c.nome %> (Doc: <%= c.documento %>)</option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div id="divOutros" style="display: none;">
+                <label>Origem/Destino (Texto):</label><br>
+                <input type="text" name="destino_texto" placeholder="Ex: Setor A / Estoque Central" style="padding: 8px; width: 300px;">
+            </div>
+            <br>
+
+            <input type="text" name="responsavel" placeholder="Responsável pela Ação" required style="padding: 8px;"><br><br>
+
+            <button type="submit" style="padding: 10px 20px;">Registrar</button>
+        </form>
+    </div>
+
+    <script>
+        // Script para alternar entre Cliente e Texto
+        function alternarDestino() {
+            const tipo = document.getElementById('tipoSelect').value;
+            const divCliente = document.getElementById('divCliente');
+            const divOutros = document.getElementById('divOutros');
+
+            if (tipo === 'SAIDA') {
+                divCliente.style.display = 'block';
+                divOutros.style.display = 'none';
+            } else {
+                divCliente.style.display = 'none';
+                divOutros.style.display = 'block';
+            }
+        }
+        // Roda ao carregar
+        alternarDestino();
+    </script>
+    <br><a href="/">Voltar</a>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciar Clientes</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f6f9; }
+        .container { max-width: 900px; margin: auto; }
+        .form-card { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input { padding: 8px; margin-right: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #343a40; color: white; }
+        .btn-salvar { background: #28a745; color: white; border: none; padding: 9px 15px; cursor: pointer; border-radius: 4px; }
+        .btn-delete { background: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+        .form-delete { display: inline; }
+    </style>
+    <script>
+        function confirmarExclusao(nome) {
+            return confirm(`Tem certeza que deseja remover o cliente "${nome}"?`);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>👥 Gerenciar Clientes</h1>
+        
+        <div class="form-card">
+            <h3>Cadastrar Novo Cliente</h3>
+            <form action="/clientes" method="POST">
+                <input type="text" name="nome" placeholder="Nome / Razão Social" required style="width: 25%;">
+                <input type="text" name="documento" placeholder="CPF / CNPJ" style="width: 20%;">
+                <input type="text" name="telefone" placeholder="Telefone" style="width: 15%;">
+                <input type="text" name="endereco" placeholder="Endereço" style="width: 25%;">
+                <button type="submit" class="btn-salvar">Salvar</button>
+            </form>
+        </div>
+
+        <h3>Lista de Clientes</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Documento</th>
+                    <th>Telefone</th>
+                    <th>Ações</th> </tr>
+            </thead>
+            <tbody>
+                <% clientes.forEach(c => { %>
+                    <tr>
+                        <td><%= c.id %></td>
+                        <td><%= c.nome %></td>
+                        <td><%= c.documento %></td>
+                        <td><%= c.telefone %></td>
+                        <td>
+                            <form action="/clientes/<%= c.id %>/deletar" method="POST" class="form-delete" onsubmit="return confirmarExclusao('<%= c.nome %>')">
+                                <button type="submit" class="btn-delete">🗑️ Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <br><a href="/" style="text-decoration: none; color: #666;">← Voltar ao Dashboard</a>
+    </div>
+</body>
+</html>
