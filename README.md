@@ -7,7 +7,7 @@ O SIGRA tem como objetivo centralizar o controle de rastreadores veiculares, int
 
 ## 🛠️ Tecnologias Utilizadas
 * **Backend:** Node.js + Express
-* **Frontend:** EJS (Embedded JavaScript) + CSS
+* **Frontend:** EJS + CSS
 * **Banco de Dados:** SQLite (Desenvolvimento)
 * **ORM:** Sequelize (Modelagem de Dados)
 * **Infraestrutura:** Docker
@@ -45,7 +45,7 @@ Certifique-se de ter o Docker instalado e rode:
 docker build -t sigra-app .
 docker run -p 3000:3000 sigra-app
 ```
-### Opção 1: Via Docker (Recomendado)
+### Opção 2: Via Node.js (Local)
 ```bash
 # Instala as dependências
 npm install
