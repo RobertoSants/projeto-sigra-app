@@ -77,9 +77,12 @@ database.sync().then(async () => {
     // Cria os usuários padrão se não existirem
     await authController.iniciarUsuariosPadrao();
     
-    // [AJUSTE CLOUD] Porta dinâmica
+    // [CORREÇÃO CLOUD]
+    // 1. Pega a porta do Render ou usa 3000
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
+    
+    // 2. O '0.0.0.0' é OBRIGATÓRIO para o Docker funcionar na nuvem
+    app.listen(PORT, '0.0.0.0', () => {
         console.log(`--- SIGRA RODANDO NA PORTA ${PORT} ---`);
     });
 });
