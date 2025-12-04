@@ -9,46 +9,65 @@ O SIGRA tem como objetivo centralizar o controle de rastreadores veiculares, int
 * **Backend:** Node.js + Express
 * **Frontend:** EJS (Embedded JavaScript) + CSS
 * **Banco de Dados:** SQLite (Desenvolvimento)
-* **ORM:** Sequelize (Modelagem de Dados)
-* **Infraestrutura:** Docker
+* **ORM:** Sequelize (Modelagem de Dados e Relacionamentos)
+* **Infraestrutura:** Docker (Container)
 
 ## 🏗️ Arquitetura do Projeto (MVC)
 O projeto segue estritamente o padrão **Model-View-Controller** conforme documentado no Modelo RUP:
 
-* 📂 **Models:** Definição das tabelas (`Usuario`, `Rastreador`, `Movimentacao`, `Manutencao`, `Cliente`) e seus relacionamentos.
+* 📂 **Models:** Definição das tabelas (`Usuario`, `Rastreador`, `Movimentacao`, `Manutencao`, `Cliente`) e seus relacionamentos (1:N).
 * 📂 **Views:** Telas renderizadas no servidor (`.ejs`) com controle de exibição baseado no perfil do usuário.
 * 📂 **Controllers:** Regras de negócio, validações de segurança e controle de fluxo.
 
+## ✅ Conformidade com Requisitos (Auditoria)
+
+O sistema implementa rigorosamente os requisitos definidos na Especificação de Requisitos de Software (SRS):
+
+### Requisitos Funcionais (RF)
+* **[RF01] CRUD de Rastreadores:** Implementado cadastro (com detalhes de Chip/Fabricante), **edição** de dados e exclusão segura.
+* **[RF02] Registrar Movimentações:** Módulo completo de logística (Entrada, Saída, Transferência).
+* **[RF03] Registrar Manutenções:** Módulo de ordem de serviço com seleção de técnicos.
+* **[RF04] Relatórios Consolidados:** Atendido via **Dashboard com KPIs** e **Ficha Técnica (Histórico)** detalhada do equipamento.
+
+### Regras de Negócio (RN) Implementadas
+* **[RN01] Identificação Única:** O campo IMEI possui restrição `unique` no banco de dados.
+* **[RN02] Associação a Cliente:** Movimentações de "Saída" exigem vínculo com a entidade `Cliente`.
+* **[RN03] Controle Obrigatório:** Data e Responsável são registrados automaticamente ou via seleção obrigatória.
+* **[RN04] Status Automático:** O sistema atualiza o status (`Em Estoque`, `Em Uso`, `Em Manutenção`) automaticamente após cada operação.
+* **[RN05/RN06] Registro Técnico:** Exige descrição do defeito e seleção do técnico responsável.
+* **[RN07] Permissões de Usuário:** * Apenas **Administradores** podem excluir ou editar registros.
+    * Botões sensíveis são ocultados nas Views para Operadores e Técnicos.
+    * **Trava de Segurança:** O Backend bloqueia a exclusão de equipamentos que não estejam com status "Em Estoque" (proteção de histórico).
+
+### Requisitos Não Funcionais (RNF)
+* **[RNF01/RNF05] Autenticação e Acesso:** Sistema de Login com controle de sessão (Cookies) e Middleware de proteção de rotas.
+* **[RNF02] Integridade:** Garantida pelo uso de Banco Relacional e ORM (Foreign Keys).
+
 ## 🔐 Acesso e Usuários Padrão
-O sistema conta com autenticação e controle de permissões (RBAC). Ao iniciar a aplicação pela primeira vez, os seguintes usuários são criados automaticamente:
+Ao iniciar a aplicação pela primeira vez, os seguintes usuários são criados automaticamente para teste:
 
 | Perfil (Cargo) | Login (E-mail) | Senha | Permissões Principais |
 | :--- | :--- | :--- | :--- |
-| **Administrador** | `admin@sigra.com` | `123` | Acesso total (CRUD completo, Excluir registros, Gerir Clientes). |
-| **Operador** | `operador@sigra.com` | `123` | Registrar Movimentações. Visualização restrita (sem botão excluir). |
+| **Administrador** | `admin@sigra.com` | `123` | Acesso total (CRUD completo, Excluir, Editar, Gerir Clientes). |
+| **Operador** | `operador@sigra.com` | `123` | Registrar Movimentações. Visualização restrita. |
 | **Técnico** | `tecnico@sigra.com` | `123` | Registrar Manutenções. Visualização restrita. |
 
-## 📋 Funcionalidades Principais (Casos de Uso)
+## 📋 Funcionalidades por Caso de Uso
 
 ### CSU01 - Gerenciar Rastreadores
-* **Cadastro Completo:** Inclui dados técnicos (Fabricante, Modelo) e dados do Chip (Operadora, ICCID).
-* **Dashboard Gerencial:** Exibição de **KPIs** (Total em Estoque, Em Cliente, Em Manutenção).
+* **Cadastro Detalhado:** Inclusão de Fabricante, Modelo, Operadora e ICCID.
+* **Dashboard:** Indicadores visuais (KPIs) de totalizadores de estoque.
 * **Busca:** Filtro avançado por IMEI ou Modelo.
-* **Segurança:** Bloqueio de exclusão para equipamentos que não estejam com status "Em Estoque".
+* **Edição:** Permite corrigir dados cadastrais (RF01).
 
 ### CSU02 - Registrar Movimentação (Rastreabilidade)
-* **Fluxo Logístico:** Registro de Entrada, Saída (vínculo com Cliente real) e Transferência.
-* **Regra de Negócio (RN04):** O sistema atualiza automaticamente o status do rastreador.
-* **Bloqueio de Segurança:** Impede a saída de equipamentos com status "Em Manutenção".
-* **Seleção de Responsável:** Lista dinâmica de usuários do sistema.
+* **Logística:** Entrada, Saída e Transferência.
+* **Seleção de Responsável:** Lista dinâmica baseada nos usuários cadastrados.
+* **Bloqueio de Segurança:** Impede a movimentação de equipamentos que estejam em manutenção.
 
 ### CSU03 - Registrar Manutenção
-* **Ordem de Serviço:** Registro de defeitos e seleção dinâmica de técnicos cadastrados.
-* **Histórico Detalhado:** Visualização completa da linha do tempo do equipamento (Movimentações + Manutenções).
-
-### Gestão de Clientes
-* Cadastro de clientes (Empresas/Pessoas) para vínculo nas movimentações de saída.
-* Proteção contra exclusão acidental por usuários não-administradores.
+* **Ordem de Serviço:** Seleção dinâmica de técnicos cadastrados no sistema.
+* **Histórico:** Visualização da linha do tempo completa (Movimentações + Manutenções) na ficha do equipamento.
 
 ## 🚀 Como Rodar o Projeto
 
