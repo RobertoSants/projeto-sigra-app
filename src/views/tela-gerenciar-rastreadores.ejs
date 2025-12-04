@@ -4,21 +4,31 @@
     <title>SIGRA - Dashboard</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; padding: 20px; background-color: #f4f6f9; }
+        
+        /* [NOVO] Estilo da Barra de Usuário no topo */
+        .user-bar { background: #343a40; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-radius: 4px; }
+        .user-info { font-size: 1.1em; }
+        .btn-logout { color: #ffc107; text-decoration: none; font-weight: bold; font-size: 0.9em; border: 1px solid #ffc107; padding: 5px 10px; border-radius: 4px; }
+        .btn-logout:hover { background: #ffc107; color: #343a40; }
+
+        /* Estilos dos KPIs */
         .kpi-container { display: flex; gap: 20px; margin-bottom: 20px; }
         .kpi-card { flex: 1; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; border-bottom: 4px solid #ccc; }
         .kpi-number { font-size: 2em; font-weight: bold; color: #333; }
         .kpi-label { color: #666; text-transform: uppercase; font-size: 0.8em; }
         
+        /* Estilos Gerais */
         .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { border-bottom: 1px solid #ddd; padding: 12px; text-align: left; }
         th { background-color: #343a40; color: white; }
         .status-manutencao { color: #dc3545; font-weight: bold; }
         
+        /* Botões */
         .btn { padding: 10px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; display: inline-block; margin-right: 10px;}
         .search-box { width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px; }
         
-        /* Estilo para formulário de exclusão ficar alinhado */
+        /* Formulário de exclusão alinhado */
         .form-delete { display: inline; }
         .btn-delete { background-color: #dc3545; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
         .btn-hist { background-color: #17a2b8; color: white; padding: 6px 10px; text-decoration: none; border-radius: 4px; font-size: 0.9em; margin-right: 5px; }
@@ -30,6 +40,12 @@
     </script>
 </head>
 <body>
+    
+    <div class="user-bar">
+        <span class="user-info">👤 Olá, <strong><%= usuario.nome %></strong> (<%= usuario.cargo %>)</span>
+        <a href="/logout" class="btn-logout">Sair 🚪</a>
+    </div>
+
     <h1>SIGRA - Gestão de Rastreadores</h1>
     
     <div class="kpi-container">
@@ -53,10 +69,19 @@
 
     <div style="margin-bottom: 20px; background: #e9ecef; padding: 15px; border-radius: 8px; display: flex; align-items: center;">
         <span style="font-weight: bold; margin-right: 15px;">Ações Rápidas:</span>
-        <a href="/rastreador/novo" class="btn" style="background: #28a745;">➕ Novo Rastreador</a>
-        <a href="/movimentacao" class="btn">🚚 Movimentação</a>
-        <a href="/manutencao" class="btn" style="background: #ffc107; color: black;">🛠️ Manutenção</a>
-        <a href="/clientes" class="btn" style="background: #6c757d;">👥 Clientes</a>
+        
+        <% if (usuario.cargo === 'Administrador') { %>
+            <a href="/rastreador/novo" class="btn" style="background: #28a745;">➕ Novo Rastreador</a>
+            <a href="/clientes" class="btn" style="background: #6c757d;">👥 Clientes</a>
+        <% } %>
+
+        <% if (usuario.cargo === 'Administrador' || usuario.cargo === 'Operador') { %>
+            <a href="/movimentacao" class="btn">🚚 Movimentação</a>
+        <% } %>
+
+        <% if (usuario.cargo === 'Administrador' || usuario.cargo === 'Tecnico') { %>
+            <a href="/manutencao" class="btn" style="background: #ffc107; color: black;">🛠️ Manutenção</a>
+        <% } %>
     </div>
 
     <div class="card">
