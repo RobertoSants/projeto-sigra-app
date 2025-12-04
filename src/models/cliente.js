@@ -1,12 +1,13 @@
 const Sequelize = require('sequelize');
 const database = require('../config/database');
 
-// [NOVO - Ideia 2] Entidade Cliente Real
-// Substitui o uso de strings soltas para garantir integridade dos dados
 const Cliente = database.define('cliente', {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
     nome: { type: Sequelize.STRING, allowNull: false },
-    documento: { type: Sequelize.STRING }, // CPF ou CNPJ
+    
+    // [CORREÇÃO] 'unique: true' impede que o banco aceite dois iguais
+    documento: { type: Sequelize.STRING, unique: true }, 
+    
     endereco: { type: Sequelize.STRING },
     telefone: { type: Sequelize.STRING }
 });
