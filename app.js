@@ -55,6 +55,10 @@ app.post('/rastreador', rastreadorController.cadastrar);
 app.get('/rastreador/:id', rastreadorController.detalhar);
 app.post('/rastreador/:id/deletar', rastreadorController.excluir);
 
+// [NOVO] Rotas de Edição (RF01)
+app.get('/rastreador/:id/editar', rastreadorController.exibirTelaEdicao);
+app.post('/rastreador/:id/editar', rastreadorController.editar);
+
 // Clientes
 app.get('/clientes', clienteController.index);
 app.post('/clientes', clienteController.cadastrar);

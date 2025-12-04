@@ -3,7 +3,7 @@ const Op = Sequelize.Op;
 const Rastreador = require('../models/rastreador');
 const Movimentacao = require('../models/movimentacao');
 const Manutencao = require('../models/manutencao');
-const Cliente = require('../models/cliente');
+const Cliente = require('../models/cliente'); // Importante para o histórico
 
 module.exports = {
     // [Diagrama de Classes Arquitetural] Método: consultar
@@ -22,6 +22,7 @@ module.exports = {
 
         const rastreadores = await Rastreador.findAll({ where: filtro });
 
+        // [Ideia 1] KPIs para o Dashboard
         const kpis = {
             total: await Rastreador.count(),
             estoque: await Rastreador.count({ where: { status: 'Em Estoque' } }),
@@ -52,19 +53,61 @@ module.exports = {
         }
     },
 
-    // [ATUALIZADO] Método excluir com Regra de Segurança Rígida
-    async excluir(req, res) {
+    // [NOVO] Método para exibir a tela de edição (RF01 - Alterar)
+    async exibirTelaEdicao(req, res) {
         const { id } = req.params;
         try {
-            // 1. Busca o rastreador primeiro para checar o status
+            const rastreador = await Rastreador.findByPk(id);
+            if (!rastreador) return res.send("Rastreador não encontrado.");
+            
+            res.render('tela-editar-rastreador', { rastreador });
+        } catch (error) {
+            res.send("Erro ao abrir edição: " + error.message);
+        }
+    },
+
+    // [NOVO] Método para salvar a edição (RF01 - Alterar)
+    async editar(req, res) {
+        const { id } = req.params;
+        const { imei, fabricante, modelo, operadora, numero_chip, linha_chip } = req.body;
+
+        try {
+            // [RN07] Verificação extra de segurança (Back-end)
+            // Mesmo que o usuário force a URL, aqui bloqueamos se não for Admin
+            if (req.cookies.usuarioCargo !== 'Administrador') {
+                return res.send("⛔ ACESSO NEGADO: Apenas Administradores podem editar registros.");
+            }
+
+            await Rastreador.update(
+                { imei, fabricante, modelo, operadora, numero_chip, linha_chip },
+                { where: { id } }
+            );
+            res.redirect('/');
+        } catch (error) {
+            res.send("Erro ao editar rastreador: " + error.message);
+        }
+    },
+
+    // [ATUALIZADO] Método excluir com Regras de Segurança Rígidas (RN07 + Status)
+    async excluir(req, res) {
+        const { id } = req.params;
+        
+        // 1. [RN07] Validação de Permissão (Backend)
+        // Garante que só o Administrador consiga executar essa ação
+        if (req.cookies.usuarioCargo !== 'Administrador') {
+            return res.send("⛔ ACESSO NEGADO: Apenas Administradores podem excluir registros.");
+        }
+
+        try {
+            // 2. Busca o rastreador primeiro para checar o status
             const rastreador = await Rastreador.findByPk(id);
 
             if (!rastreador) {
                 return res.send("Rastreador não encontrado.");
             }
 
-            // 2. [Regra de Negócio] Só permite excluir se estiver em ESTOQUE
-            // Qualquer outro status (Em Uso, Em Manutenção, Em Trânsito) será bloqueado.
+            // 3. [Regra de Negócio] Só permite excluir se estiver em ESTOQUE
+            // Protege contra exclusão de ativos que estão na rua ou em manutenção
             if (rastreador.status !== 'Em Estoque') {
                 return res.send(`
                     <div style="font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; text-align: center;">
@@ -79,7 +122,7 @@ module.exports = {
                 `);
             }
 
-            // 3. Se estiver "Em Estoque", permite a exclusão
+            // 4. Se estiver "Em Estoque", permite a exclusão
             await rastreador.destroy();
             res.redirect('/');
         } catch (error) {
@@ -95,7 +138,7 @@ module.exports = {
                 include: [
                     { 
                         model: Movimentacao,
-                        include: [{ model: Cliente }]
+                        include: [{ model: Cliente }] // [Nested Include] Traz o Cliente dentro da Movimentação
                     },
                     { model: Manutencao }
                 ]
