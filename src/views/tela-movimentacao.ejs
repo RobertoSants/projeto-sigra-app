@@ -36,14 +36,22 @@
             </div>
             <br>
 
-            <input type="text" name="responsavel" placeholder="Responsável pela Ação" required style="padding: 8px;"><br><br>
+            <label>Responsável pela Ação:</label><br>
+            <select name="responsavel" required style="padding: 8px; width: 300px;">
+                <option value="">-- Quem está realizando? --</option>
+                <% usuarios.forEach(u => { %>
+                    <option value="<%= u.nome %>" <%= u.id == usuario.id ? 'selected' : '' %>>
+                        <%= u.nome %> (<%= u.cargo %>)
+                    </option>
+                <% }) %>
+            </select><br><br>
 
             <button type="submit" style="padding: 10px 20px;">Registrar</button>
         </form>
     </div>
 
     <script>
-        // Script para alternar entre Cliente e Texto
+        // Script simples para mostrar/esconder o campo de Cliente
         function alternarDestino() {
             const tipo = document.getElementById('tipoSelect').value;
             const divCliente = document.getElementById('divCliente');

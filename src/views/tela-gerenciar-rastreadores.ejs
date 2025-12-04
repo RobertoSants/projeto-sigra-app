@@ -11,7 +11,7 @@
         .btn-logout { color: #ffc107; text-decoration: none; font-weight: bold; font-size: 0.9em; border: 1px solid #ffc107; padding: 5px 10px; border-radius: 4px; }
         .btn-logout:hover { background: #ffc107; color: #343a40; }
 
-        /* Estilos dos KPIs */
+        /* Estilos dos KPIs (Mantidos do seu código) */
         .kpi-container { display: flex; gap: 20px; margin-bottom: 20px; }
         .kpi-card { flex: 1; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; border-bottom: 4px solid #ccc; }
         .kpi-number { font-size: 2em; font-weight: bold; color: #333; }
@@ -112,9 +112,11 @@
                         <td>
                             <a href="/rastreador/<%= r.id %>" class="btn-hist">👁️ Ver</a>
                             
-                            <form action="/rastreador/<%= r.id %>/deletar" method="POST" class="form-delete" onsubmit="return confirmarExclusao('<%= r.imei %>')">
-                                <button type="submit" class="btn-delete">🗑️ Excluir</button>
-                            </form>
+                            <% if (usuario.cargo === 'Administrador') { %>
+                                <form action="/rastreador/<%= r.id %>/deletar" method="POST" class="form-delete" onsubmit="return confirmarExclusao('<%= r.imei %>')">
+                                    <button type="submit" class="btn-delete">🗑️ Excluir</button>
+                                </form>
+                            <% } %>
                         </td>
                     </tr>
                 <% }) %>
