@@ -1,37 +1,37 @@
-# SIGRA - Sistema de Gestão de Rastreadores 🛰️
+# SIGRA - Sistema de Gestão de Rastreadores
 
 > Projeto desenvolvido para a disciplina de **Análise e Projeto de Sistemas de Informação (APSI)** do curso de Bacharelado em Sistemas de Informação - IFAL.
 
-## 🌐 Acesso Online (Demo)
+## Acesso Online (Demo)
 O sistema está implantado e rodando na nuvem (PaaS Render) via Docker.
 **Acesse aqui:** [https://projeto-sigra-app.onrender.com](https://projeto-sigra-app.onrender.com)
 
 ---
 
-## 🎯 Objetivo
-O SIGRA tem como objetivo centralizar o controle interno e logístico do ciclo de vida de rastreadores veiculares, integrando os setores de administração, manutenção e estoque técnico. O sistema gerencia desde a aquisição e entrada em estoque até a vinculação com clientes e manutenções, garantindo rastreabilidade total e integridade dos dados.
+## Objetivo
+O sistema tem como objetivo centralizar o controle interno e logístico do ciclo de vida de rastreadores veiculares, fazendo a integração com os setores de administração, manutenção e estoque técnico. O sistema gerencia desde a aquisição e entrada em estoque até a vinculação com clientes e manutenções, garantindo rastreabilidade total e integridade dos dados.
 
 Suas principais funcionalidades incluem o controle de movimentações (entrada, saída e transferência), a gestão de equipamentos (com detalhes técnicos e de conectividade), o registro de eventos e manutenções, e a emissão de relatórios. Além disso, o sistema oferece suporte à tomada de decisão através de um Dashboard gerencial com KPIs e assegura a segurança das operações mediante controle de acesso por perfis.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 * **Backend:** Node.js + Express
 * **Frontend:** EJS (Embedded JavaScript) + CSS
 * **Banco de Dados:** SQLite (Desenvolvimento/Containerizado)
 * **ORM:** Sequelize (Modelagem de Dados e Relacionamentos)
 * **Infraestrutura:** Docker (Containerização) & Render (Cloud Deploy)
 
-## 🏗️ Arquitetura do Projeto (MVC)
+## Arquitetura do Projeto (MVC)
 O projeto segue estritamente o padrão **Model-View-Controller** conforme documentado no Modelo RUP:
 
-* 📂 **Models:** Definição das tabelas (`Usuario`, `Rastreador`, `Movimentacao`, `Manutencao`, `Cliente`) e seus relacionamentos (1:N).
-* 📂 **Views:** Telas renderizadas no servidor (`.ejs`) com controle de exibição baseado no perfil do usuário.
-* 📂 **Controllers:** Regras de negócio, validações de segurança e controle de fluxo.
+* **Models:** Definição das tabelas (`Usuario`, `Rastreador`, `Movimentacao`, `Manutencao`, `Cliente`) e seus relacionamentos (1:N).
+* **Views:** Telas renderizadas no servidor (`.ejs`) com controle de exibição baseado no perfil do usuário.
+* **Controllers:** Regras de negócio, validações de segurança e controle de fluxo.
 
-## ✅ Conformidade com Requisitos (Auditoria)
+## Conformidade com Requisitos
 
-O sistema implementa rigorosamente os requisitos definidos na Especificação de Requisitos de Software (SRS):
+O sistema implementa os requisitos definidos na Especificação de Requisitos de Software (SRS):
 
 ### Requisitos Funcionais (RF)
 * **[RF01] CRUD de Rastreadores:** Cadastro técnico (Chip/Fabricante), edição de dados e exclusão segura.
@@ -55,7 +55,7 @@ O sistema implementa rigorosamente os requisitos definidos na Especificação de
 * **[RNF01/RNF05] Autenticação e Acesso:** Sistema de Login com controle de sessão (Cookies) e Middleware de proteção de rotas.
 * **[RNF02] Integridade:** Garantida pelo uso de Banco Relacional e ORM (Foreign Keys).
 
-## 🔐 Acesso e Usuários Padrão
+## Acesso e Usuários Padrão
 Ao acessar a Demo Online ou rodar localmente, utilize as credenciais abaixo (criadas automaticamente):
 
 | Perfil (Cargo) | Login (E-mail) | Senha | Permissões Principais |
@@ -64,7 +64,7 @@ Ao acessar a Demo Online ou rodar localmente, utilize as credenciais abaixo (cri
 | **Operador** | `operador@sigra.com` | `123` | Registrar Movimentações. Visualização restrita. |
 | **Técnico** | `tecnico@sigra.com` | `123` | Registrar Manutenções. Visualização restrita. |
 
-## 📋 Funcionalidades por Caso de Uso
+## Funcionalidades por Caso de Uso
 
 ### CSU01 - Gerenciar Rastreadores
 * **Cadastro Detalhado:** Inclusão de Fabricante, Modelo, Operadora e ICCID.
@@ -86,7 +86,7 @@ Ao acessar a Demo Online ou rodar localmente, utilize as credenciais abaixo (cri
 * **Integridade de Dados:** Validação de CPF/CNPJ único no banco de dados.
 * **Segurança de Exclusão:** Bloqueio automático de exclusão caso o cliente possua histórico de movimentações vinculadas.
 
-## 🚀 Como Rodar o Projeto (Localmente)
+## Como Rodar o Projeto (Localmente)
 
 Caso queira executar fora da nuvem:
 
